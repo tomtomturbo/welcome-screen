@@ -6,11 +6,11 @@
       <h1 style="text-align: left">Welcome to Opportunity</h1>
       <p class="currentTime">{{ currentDateTime() }}</p>
     </div>
-      <ul>
+      <ul class="unorderedList">
         <li class="li">
           <span class="entry-daytime">12.00 Uhr</span>
-          <h3>Basisbeschäftigung Besuch</h3>
-          <span class="entry-description">erster Eintrag </span>
+          <h3>Intro to Vue.js </h3>
+          <span class="entry-description">Basics with Crizzy </span>
         </li>
         <li class="li">
           <span class="entry-daytime">14.00 Uhr </span>
@@ -57,7 +57,6 @@ export default {
   },
 };
 </script>
-
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap");
 body {
@@ -81,29 +80,48 @@ body {
   color:#ffbfab;
   margin: 2rem;
   padding: 2rem;
+  
+  
  
+}
+.unorderedList{
+  line-height: 1rem;
+  margin-right: 4rem;
 }
 .entry-daytime {
   color: #EB5E00;
   font-weight: 900;
-  font-size: 28px;
-  line-height: 10px;
 
 }
 .header {
  
   margin-left: 4.5rem;
-  margin-right: 2rem;
   text-align: left;
-  font-size: small;
+  font-size: 50px;
+  line-height: 75px;
 
   }
 
 .currentTime{
-font-size: 28px;
-font-weight: 900;
+font-size: 62px;
+color: grey
 }
 .img{
   width: 20%;
+  margin-left: auto;
+  margin-right: auto;
 }
+  
+footer{
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  padding-bottom: 10px;
+
+  
+
+}
+
 </style>
+
+
