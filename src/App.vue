@@ -5,17 +5,19 @@
         <h1 style="text-align: left">{{ title }}</h1>
         <p class="currentTime">{{ currentDateTime() }}</p>
       </div>
-      <ul class="unorderedList">
-        <li class="li"
-        v-for="entry in entries"
-        :key="entry.id"
-        >
-          <span class="entry">{{ entry[0] }} , {{entry[1].replaceAll("/",".")}}</span><br>
-          <h3>{{entry[2]}}</h3>
-          <span>{{entry[3]}}</span><br>
+
+      <ul v-if="entries" class="unorderedList">
+        <li class="li" v-for="entry in entries" :key="entry.id">
+          <span class="entry"
+            >{{ entry[0].replace(":",".") }} , {{ entry[1].replaceAll("/", ".") }}</span
+          ><br />
+          <h3>{{ entry[2] }}</h3>
+          <span class="thirdLine">{{ entry[3] }}</span
+          ><br />
         </li>
       </ul>
-    
+
+      <p class="sentence" v-else>keine Einträge</p>
 
       <footer>
         <img class="img" src="./assets/STZH_SEB_Logo.png" />
@@ -27,48 +29,54 @@
 </template>
 
 <script>
-import axios from "axios";//axios is a library for making HTTP requests to the backend
+import axios from "axios"; //axios is a library for making HTTP requests to the backend
 
 export default {
   name: "App",
-  data(){
+  data() {
     return {
       title: "Welcome to Opportunity",
       sheet_id: "1a81aI0Y8ViZO0tI92h2YSMqVQJ8hmNNMyMylXgvwiU4",
       api_token: "AIzaSyA-qeDXOhEeQDA0vQf7LgkF7DQtGnAtmAU",
-      entries:[],
+      entries: [],
       dateTime: "",
-    }
+    };
   },
+
   computed: {
-    gsheet_url(){
-      return `https://sheets.googleapis.com/v4/spreadsheets/${this.sheet_id}/values:batchGet?ranges=A2%3AE200&valueRenderOption=FORMATTED_VALUE&key=${this.api_token}`
+    gsheet_url() {
+      return `https://sheets.googleapis.com/v4/spreadsheets/${this.sheet_id}/values:batchGet?ranges=A2%3AE200&valueRenderOption=FORMATTED_VALUE&key=${this.api_token}`;
     },
-  
   },
   methods: {
     currentDateTime() {
       const current = new Date();
       const day = current.getDate();
-      const month = (current.getMonth()+1);
+      const month = current.getMonth() + 1;
       const year = current.getFullYear();
-    
-      const dateTime = day + '.' + month  + '.' + year;
 
-      if (month<10){
-        return day + '.' + '0' + month  + '.' + year;
+      const dateTime = day + "." + month + "." + year;
+
+      if (month < 10) {
+        return day + "." + "0" + month + "." + year;
       }
       return dateTime;
     },
-    getData(){
+    getData() {
       axios.get(this.gsheet_url).then((response) => {
         this.entries = response.data.valueRanges[0].values;
+        console.log(this.entries);
       });
+    },
+    refreshData() {
+      this.currentDateTime();
+      this.getData();
     },
   },
   mounted() {
-    this.getData();
-  }
+    this.refreshData();
+    setInterval(this.refreshData, 1000 * 60 * 30);
+  },
 };
 </script>
 <style>
@@ -93,16 +101,14 @@ body {
   color: #ffbfab;
   margin: 1.5rem;
   padding: 2.5rem;
+  line-height: 20px;
 }
-.unorderedList {
-  line-height: 0.5rem;
+/* .unorderedList {
+  line-height: 2rem;
   margin-right: 2rem;
   margin-left: 0.5rem;
-}
-.entry-daytime {
-  color: #eb5e00;
-  font-weight: 900;
-}
+} */
+
 .header {
   margin-left: 4.5rem;
   text-align: left;
@@ -126,10 +132,22 @@ footer {
   flex-wrap: wrap;
   padding-bottom: 10px;
   background-color: #ffffff;
+  position: fixed;
+  bottom: 0;
 }
 
-.entry{
-  color: red
+.entry {
+  color: #eb5e00;
+  font-size: 28px;
+  font-weight: 900;
+}
+.thirdLine {
+  font-weight: 400;
+}
+.sentence {
+  margin-left: 80px;
+  color: darkblue;
+  font-weight: 900;
 }
 </style>
 
